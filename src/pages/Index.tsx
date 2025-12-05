@@ -155,9 +155,9 @@ export default function Index() {
       <section id="home" className="relative min-h-screen flex items-center justify-center overflow-hidden pt-16">
         <div className="absolute inset-0 bg-gradient-to-br from-secondary via-secondary/90 to-black z-0" />
         <div
-          className="absolute inset-0 z-0 opacity-30"
+          className="absolute inset-0 z-0 opacity-40"
           style={{
-            backgroundImage: 'url(https://cdn.poehali.dev/projects/3c6f40e1-c306-4e4c-88ee-da32a8fb926a/files/7518b30f-03ac-4be5-ac3a-68a316cbf360.jpg)',
+            backgroundImage: 'url(https://cdn.poehali.dev/files/afdd1618-accb-44ed-b7ca-82b0ce6fa74e.png)',
             backgroundSize: 'cover',
             backgroundPosition: 'center',
           }}
