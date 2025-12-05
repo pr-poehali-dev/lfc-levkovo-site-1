@@ -1,86 +1,106 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import Icon from '@/components/ui/icon';
+import AdminPanel from '@/components/AdminPanel';
+
+const INITIAL_MATCHES = [
+  {
+    id: 1,
+    date: '15 ноября 2024',
+    opponent: 'ФК СПАРТАК',
+    score: '3:1',
+    result: 'win' as const,
+    stadium: 'Стадион Левково',
+    attendance: 5420,
+    goalScorers: ['Кузнецов С. (12, 45+2)', 'Смирнов А. (67)'],
+    opponentGoals: ['Иванов П. (78)'],
+    possession: 58,
+    shots: 16,
+    shotsOnTarget: 8,
+    corners: 7,
+    fouls: 11,
+    yellowCards: 2,
+    redCards: 0,
+    opponentStats: { possession: 42, shots: 9, shotsOnTarget: 4, corners: 3, fouls: 14, yellowCards: 3, redCards: 0 },
+  },
+  {
+    id: 2,
+    date: '8 ноября 2024',
+    opponent: 'ЗЕНИТ СПБ',
+    score: '1:1',
+    result: 'draw' as const,
+    stadium: 'Стадион Зенит',
+    attendance: 12500,
+    goalScorers: ['Сидоров М. (34)'],
+    opponentGoals: ['Петров Д. (56)'],
+    possession: 48,
+    shots: 11,
+    shotsOnTarget: 5,
+    corners: 5,
+    fouls: 13,
+    yellowCards: 3,
+    redCards: 0,
+    opponentStats: { possession: 52, shots: 13, shotsOnTarget: 6, corners: 6, fouls: 10, yellowCards: 2, redCards: 0 },
+  },
+  {
+    id: 3,
+    date: '1 ноября 2024',
+    opponent: 'FC ДИНАМО',
+    score: '0:2',
+    result: 'loss' as const,
+    stadium: 'Стадион Динамо',
+    attendance: 8900,
+    goalScorers: [],
+    opponentGoals: ['Козлов А. (23)', 'Морозов В. (82)'],
+    possession: 44,
+    shots: 8,
+    shotsOnTarget: 3,
+    corners: 4,
+    fouls: 15,
+    yellowCards: 4,
+    redCards: 0,
+    opponentStats: { possession: 56, shots: 15, shotsOnTarget: 9, corners: 8, fouls: 9, yellowCards: 1, redCards: 0 },
+  },
+];
+
+const INITIAL_LEAGUE = [
+  { position: 1, team: 'FC ДИНАМО', played: 12, won: 10, drawn: 1, lost: 1, points: 31 },
+  { position: 2, team: 'LFC LEVKOVO', played: 12, won: 8, drawn: 3, lost: 1, points: 27, highlight: true },
+  { position: 3, team: 'ФК СПАРТАК', played: 12, won: 8, drawn: 2, lost: 2, points: 26 },
+  { position: 4, team: 'ЗЕНИТ СПБ', played: 12, won: 7, drawn: 3, lost: 2, points: 24 },
+  { position: 5, team: 'ЛОКОМОТИВ', played: 12, won: 6, drawn: 4, lost: 2, points: 22 },
+];
 
 export default function Index() {
   const [activeSection, setActiveSection] = useState('home');
   const [selectedMatch, setSelectedMatch] = useState<number | null>(null);
+  const [matches, setMatches] = useState(INITIAL_MATCHES);
+  const [leagueTable, setLeagueTable] = useState(INITIAL_LEAGUE);
+
+  useEffect(() => {
+    const savedMatches = localStorage.getItem('lfcMatches');
+    const savedLeague = localStorage.getItem('lfcLeague');
+    if (savedMatches) setMatches(JSON.parse(savedMatches));
+    if (savedLeague) setLeagueTable(JSON.parse(savedLeague));
+  }, []);
+
+  const handleUpdateMatches = (newMatches: typeof INITIAL_MATCHES) => {
+    setMatches(newMatches);
+    localStorage.setItem('lfcMatches', JSON.stringify(newMatches));
+  };
+
+  const handleUpdateLeague = (newLeague: typeof INITIAL_LEAGUE) => {
+    setLeagueTable(newLeague);
+    localStorage.setItem('lfcLeague', JSON.stringify(newLeague));
+  };
 
   const scrollToSection = (sectionId: string) => {
     setActiveSection(sectionId);
     const element = document.getElementById(sectionId);
     element?.scrollIntoView({ behavior: 'smooth' });
   };
-
-  const matches = [
-    {
-      id: 1,
-      date: '15 ноября 2024',
-      opponent: 'ФК СПАРТАК',
-      score: '3:1',
-      result: 'win',
-      stadium: 'Стадион Левково',
-      attendance: 5420,
-      goalScorers: ['Кузнецов С. (12, 45+2)', 'Смирнов А. (67)'],
-      opponentGoals: ['Иванов П. (78)'],
-      possession: 58,
-      shots: 16,
-      shotsOnTarget: 8,
-      corners: 7,
-      fouls: 11,
-      yellowCards: 2,
-      redCards: 0,
-      opponentStats: { possession: 42, shots: 9, shotsOnTarget: 4, corners: 3, fouls: 14, yellowCards: 3, redCards: 0 },
-    },
-    {
-      id: 2,
-      date: '8 ноября 2024',
-      opponent: 'ЗЕНИТ СПБ',
-      score: '1:1',
-      result: 'draw',
-      stadium: 'Стадион Зенит',
-      attendance: 12500,
-      goalScorers: ['Сидоров М. (34)'],
-      opponentGoals: ['Петров Д. (56)'],
-      possession: 48,
-      shots: 11,
-      shotsOnTarget: 5,
-      corners: 5,
-      fouls: 13,
-      yellowCards: 3,
-      redCards: 0,
-      opponentStats: { possession: 52, shots: 13, shotsOnTarget: 6, corners: 6, fouls: 10, yellowCards: 2, redCards: 0 },
-    },
-    {
-      id: 3,
-      date: '1 ноября 2024',
-      opponent: 'FC ДИНАМО',
-      score: '0:2',
-      result: 'loss',
-      stadium: 'Стадион Динамо',
-      attendance: 8900,
-      goalScorers: [],
-      opponentGoals: ['Козлов А. (23)', 'Морозов В. (82)'],
-      possession: 44,
-      shots: 8,
-      shotsOnTarget: 3,
-      corners: 4,
-      fouls: 15,
-      yellowCards: 4,
-      redCards: 0,
-      opponentStats: { possession: 56, shots: 15, shotsOnTarget: 9, corners: 8, fouls: 9, yellowCards: 1, redCards: 0 },
-    },
-  ];
-
-  const leagueTable = [
-    { position: 1, team: 'FC ДИНАМО', played: 12, won: 10, drawn: 1, lost: 1, points: 31 },
-    { position: 2, team: 'LFC LEVKOVO', played: 12, won: 8, drawn: 3, lost: 1, points: 27, highlight: true },
-    { position: 3, team: 'ФК СПАРТАК', played: 12, won: 8, drawn: 2, lost: 2, points: 26 },
-    { position: 4, team: 'ЗЕНИТ СПБ', played: 12, won: 7, drawn: 3, lost: 2, points: 24 },
-    { position: 5, team: 'ЛОКОМОТИВ', played: 12, won: 6, drawn: 4, lost: 2, points: 22 },
-  ];
 
   const players = [
     { number: 1, name: 'Иванов Алексей', position: 'Вратарь', photo: '🧤' },
@@ -568,6 +588,13 @@ export default function Index() {
           <p className="text-primary/60">© 2024 LFC LEVKOVO. Все права защищены.</p>
         </div>
       </footer>
+
+      <AdminPanel
+        matches={matches}
+        leagueTable={leagueTable}
+        onUpdateMatches={handleUpdateMatches}
+        onUpdateLeague={handleUpdateLeague}
+      />
     </div>
   );
 }
